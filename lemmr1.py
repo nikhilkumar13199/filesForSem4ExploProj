@@ -1,5 +1,5 @@
 import re
-import nltk
+
 
 
 def cons(s,i):
@@ -54,7 +54,7 @@ while True:
     #rule for proper noun
     if tag=='PN':
     	pass
-    elif tag=='NNP': #rule for other nouns plural
+    elif tag=='NNS' or tag=='nns' or tag=='nnps' or tag=='NNPS': #rule for other nouns plural
     	t=s[:len(s)-2]
     	if s not in exceps['NNP'] and s not in same['NNP']:
 	    	if re.match('[a-z]*ies$',s) and m(s[:len(s)-3]):
@@ -81,7 +81,7 @@ while True:
 	    	elif re.match('[a-z]*es$',s) and m(s[:len(s)-2])>0 and ( re.match('[a-z]*s$',t) or re.match('[a-z]*ss$',t) or re.match('[a-z]*sh$',t) or re.match('[a-z]*ch$',t) or re.match('[a-z]*x$',t) ):
 	    		print(8)
 	    		s=s[:len(s)-2]
-    elif tag=='v' or tag=='vb' or tag=='vbd' or tag=='vbg' or tag=='vbn' or tag=='vbp' or tag=='vbz':
+    elif tag=='v' or tag=='vb' or tag=='vbd' or tag=='vbg' or tag=='vbn' or tag=='vbp' or tag=='vbz': # rules for verbs
         if s in irrverbs1:
             s=irrverbs1[s]
         elif s in irrverbs2:
@@ -96,16 +96,22 @@ while True:
             s=s[:len(s)-2]
         elif re.match('[a-z]*d$',s) and m(s[:len(s)-1])>0:
             s=s[:len(s)-1]
-    elif tag=='jjr' or tag=='JJR':
+    elif tag=='jjr' or tag=='JJR': #rules for comparative degree adjectives
         if s in compAdj:
             s=compAdj[s]
         elif re.match('[a-z]*er$',s):
-            s=s[:len(s)-2]
-    elif tag=='jjs' or tag=='JJS':
+            if re.match('[a-z]*ier$',s):
+                s=s[:len(s)-3]+'y'
+            else:
+                s=s[:len(s)-2]
+    elif tag=='jjs' or tag=='JJS': # rules for superlative degree adjectives
         if s in superAdj:
             s=superAdj[s]
         elif re.match('[a-z]*est$',s):
-            s=s[:len(s)-3]
+            if re.match('[a-z]*iest$',s):
+                s=s[:len(s)-4]+'y'
+            else:
+                s=s[:len(s)-3]
 
-    
+
     print(s)
